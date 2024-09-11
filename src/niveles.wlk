@@ -8,7 +8,10 @@ object tutorial1 {
 	method iniciar() {
 		game.addVisual(nido)
 		game.addVisual(silvestre)
-		game.addVisualCharacter(pepita)
+		game.addVisual(pepita)
+		config.configurarColisiones()
+		config.configurarTeclas()
+		game.schedule(5000, {pepita.teletransportate()})
 	}
 
 }
@@ -22,6 +25,7 @@ object tutorial2 {
 		game.addVisual(silvestre)
 		game.addVisual(pepita)
 		config.configurarTeclas()
+		
 	}
 
 }
@@ -41,15 +45,28 @@ object tutorial3 {
 }
 
 object config {
-
+	var property tiempo = 500
 	method configurarTeclas() {
-		keyboard.left().onPressDo({ pepita.irA(pepita.position().left(1))})
-		keyboard.right().onPressDo({ pepita.irA(pepita.position().right(1))})
-		// Completar para que se pueda mover arriba y abajo
+		keyboard.left().onPressDo({ 
+			if(0 < pepita.position().x())
+				pepita.position(pepita.position().left(1))})
+		keyboard.right().onPressDo({ 
+			if(game.width()-1 > pepita.position().x()) 
+				pepita.position(pepita.position().right(1))})
+		keyboard.down().onPressDo({ 
+			if(0 < pepita.position().y())
+				pepita.position(pepita.position().down(1))})
+		keyboard.up().onPressDo({ 
+			if(game.height()-1 > pepita.position().y())
+				pepita.position(pepita.position().up(1))})
+		keyboard.t().onPressDo({
+			game.onTick(tiempo,"TransportacionPepita",{pepita.teletransportate()})
+		})
+		keyboard.p().onPressDo({game.removeTickEvent("TransportacionPepita")})
 	}
 
 	method configurarColisiones() {
-		game.onCollideDo(pepita, { algo => algo.teEncontro(pepita)})
+		game.onCollideDo(pepita, {algo => algo.teEncontro(pepita)})
 	}
 
 }

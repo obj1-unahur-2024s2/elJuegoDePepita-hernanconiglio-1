@@ -5,10 +5,7 @@ object pepita {
 
 	var property energia = 100
 	var property position = game.origin()
-
-	method image() {
-		return if (self.estaEnElNido()) "pepita-grande.png" else "pepita.png"
-	}
+	var property image = "pepita.png"
 
 	method come(comida) {
 		energia = energia + comida.energiaQueOtorga()
@@ -27,10 +24,10 @@ object pepita {
 		return energia <= 0
 	}
 
-	method estaEnElNido() {
-		
-		return false // Reemplazar por el código correcto
-	}
+	method estaEnElNido() = self.position() == nido.position()
 
+	method teletransportate() {
+		self.position(game.at(0.randomUpTo(game.width()-1),0.randomUpTo(game.height()-1)))
+	}
 }
 
